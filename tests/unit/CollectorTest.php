@@ -19,4 +19,17 @@ class CollectorTest extends TestCase {
 		$this->assertArrayHasKey( 'last_capture', $state );
 		$this->assertSame( '0', $state['capture_active'] );
 	}
+
+	public function test_describe_query_creates_readable_order_lookup_summary() {
+		$collector = Shift8_DBCache_Collector::get_instance();
+		$insight = $collector->describe_query(
+			"SELECT * FROM wp_posts WHERE ID = 123 AND post_type = 'shop_order'",
+			'wp_posts',
+			'woocommerce'
+		);
+
+		$this->assertSame( 'WooCommerce order query lookup by ID', $insight['label'] );
+		$this->assertContains( 'WooCommerce frontend', $insight['summary'] );
+		$this->assertContains( 'wildcarding the unique ID', $insight['rule_hint'] );
+	}
 }

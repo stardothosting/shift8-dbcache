@@ -1,0 +1,160 @@
+/* Admin styles for Shift8 DB Cache */
+
+.shift8-dbcache-admin-container {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.shift8-dbcache-main-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.shift8-dbcache-sidebar {
+    width: 300px;
+    flex-shrink: 0;
+}
+
+.shift8-dbcache-card {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+    margin-bottom: 20px;
+    padding: 20px;
+    max-width: none;
+}
+
+.shift8-dbcache-card .title,
+.shift8-dbcache-card h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #23282d;
+}
+
+.shift8-dbcache-form-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+.shift8-dbcache-inline-status {
+    color: #50575e;
+}
+
+.shift8-dbcache-inline-status.is-success {
+    color: #00a32a;
+    font-weight: 600;
+}
+
+.shift8-dbcache-inline-status.is-muted {
+    color: #646970;
+}
+
+.shift8-dbcache-status-card .widefat td:first-child {
+    width: 45%;
+    font-weight: 600;
+    background: #f6f7f7;
+}
+
+.shift8-dbcache-card .form-table {
+    width: 100%;
+}
+
+.shift8-dbcache-card details {
+    margin-top: 8px;
+}
+
+.shift8-dbcache-card details summary {
+    cursor: pointer;
+}
+
+.shift8-dbcache-capture-controls {
+    margin-bottom: 24px;
+}
+
+.shift8-dbcache-capture-status {
+    margin-left: 12px;
+}
+
+.shift8-dbcache-analysis-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: end;
+    margin-bottom: 16px;
+}
+
+.shift8-dbcache-analysis-filters label,
+.shift8-dbcache-create-rule-form label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.shift8-dbcache-inline-form {
+    display: inline;
+}
+
+.shift8-dbcache-action-buttons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.shift8-dbcache-create-rule-form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(120px, 1fr));
+    gap: 8px;
+    align-items: end;
+}
+
+.shift8-dbcache-existing-rule {
+    color: #2271b1;
+    margin: 6px 0 0;
+}
+
+.shift8-dbcache-pagination {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+}
+
+.shift8-dbcache-rules-table td,
+.shift8-dbcache-analysis-table td {
+    vertical-align: top;
+}
+
+@media (max-width: 1200px) {
+    .shift8-dbcache-admin-container {
+        flex-direction: column;
+    }
+
+    .shift8-dbcache-sidebar {
+        width: 100%;
+    }
+}
+
+@media (max-width: 782px) {
+    .shift8-dbcache-form-actions {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .shift8-dbcache-create-rule-form,
+    .shift8-dbcache-analysis-filters {
+        grid-template-columns: 1fr;
+        display: grid;
+    }
+
+    .shift8-dbcache-action-buttons {
+        flex-wrap: wrap;
+    }
+}

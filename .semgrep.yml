@@ -1,0 +1,11 @@
+rules:
+  - id: php-dangerous-dynamic-exec
+    languages:
+      - php
+    severity: ERROR
+    message: Avoid dynamic code execution or shell execution in PHP.
+    pattern-either:
+      - pattern: eval(...)
+      - pattern: system(...)
+      - pattern: shell_exec(...)
+      - pattern: exec(...)

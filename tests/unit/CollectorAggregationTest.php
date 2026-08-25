@@ -56,4 +56,57 @@ class CollectorAggregationTest extends TestCase {
 		$state = get_option( 'shift8_dbcache_analysis' );
 		$this->assertSame( '0', $state['capture_active'] );
 	}
+
+	public function test_collect_queries_ignores_fast_noise_below_threshold() {
+		global $shift8_dbcache_test_options;
+		$shift8_dbcache_test_options = array(
+			'shift8_dbcache_settings' => array_merge(
+				Shift8_DBCache_Settings::get_default_settings(),
+				array(
+					'capture_min_query_time' => 0.05,
+					'max_tracked_patterns' => 500,
+				)
+			),
+		);
+
+		$collector = Shift8_DBCache_Collector::get_instance();
+		$aggregates = $collector->collect_queries(
+			array(
+				array( 'SELECT * FROM wp_posts WHERE id = 1', 0.01, '' ),
+				array( 'SELECT * FROM wp_posts WHERE id = 2', 0.06, '' ),
+			),
+			'/shop',
+			'frontend'
+		);
+
+		$this->assertCount( 1, $aggregates );
+		$this->assertArrayHasKey( 'select * from wp_posts where id = ?', $aggregates );
+		$this->assertSame( 1, $aggregates['select * from wp_posts where id = ?']['count'] );
+	}
+
+	public function test_collect_queries_caps_distinct_patterns() {
+		global $shift8_dbcache_test_options;
+		$shift8_dbcache_test_options = array(
+			'shift8_dbcache_settings' => array_merge(
+				Shift8_DBCache_Settings::get_default_settings(),
+				array(
+					'capture_min_query_time' => 0.01,
+					'max_tracked_patterns' => 2,
+				)
+			),
+		);
+
+		$collector = Shift8_DBCache_Collector::get_instance();
+		$aggregates = $collector->collect_queries(
+			array(
+				array( 'SELECT * FROM wp_posts WHERE id = 1', 0.10, '' ),
+				array( 'SELECT * FROM wp_postmeta WHERE post_id = 2', 0.10, '' ),
+				array( 'SELECT * FROM wp_users WHERE ID = 3', 0.10, '' ),
+			),
+			'/shop',
+			'frontend'
+		);
+
+		$this->assertCount( 2, $aggregates );
+	}
 }

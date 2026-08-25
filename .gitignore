@@ -1,7 +1,6 @@
 
 
-#Ignore vscode AI rules
-.github/instructions/codacy.instructions.md
-
-query-monitor/*
-redis-cache/*
+# Ignore generated reference bundles and AI tooling metadata
+/.github/instructions/
+/query-monitor/
+/redis-cache/

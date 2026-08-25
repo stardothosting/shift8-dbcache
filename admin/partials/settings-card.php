@@ -1,0 +1,29 @@
+<?php
+$settings = isset( $settings ) && is_array( $settings ) ? $settings : array();
+$redis_status = isset( $redis_status ) && is_array( $redis_status ) ? $redis_status : array( 'connected' => false, 'message' => '' );
+?>
+<div class="card shift8-dbcache-card">
+	<h2 class="title"><?php esc_html_e( 'Runtime settings', 'shift8-dbcache' ); ?></h2>
+	<form method="post" action="options.php">
+		<?php settings_fields( 'shift8_dbcache_settings' ); ?>
+		<?php wp_nonce_field( 'shift8_dbcache_test_redis_connection', 'shift8_dbcache_test_nonce' ); ?>
+		<table class="form-table" role="presentation">
+			<tr><th scope="row"><label for="capture_window_minutes"><?php esc_html_e( 'Capture window (minutes)', 'shift8-dbcache' ); ?></label></th><td><input name="shift8_dbcache_settings[capture_window_minutes]" id="capture_window_minutes" type="number" min="5" value="<?php echo esc_attr( $settings['capture_window_minutes'] ); ?>" class="small-text" /></td></tr>
+			<tr><th scope="row"><label for="capture_min_query_time"><?php esc_html_e( 'Capture minimum query time (seconds)', 'shift8-dbcache' ); ?></label></th><td><input name="shift8_dbcache_settings[capture_min_query_time]" id="capture_min_query_time" type="number" min="0.001" step="0.001" value="<?php echo esc_attr( $settings['capture_min_query_time'] ); ?>" class="small-text" /><p class="description"><?php esc_html_e( 'Ignore faster queries during capture to reduce noise and overhead.', 'shift8-dbcache' ); ?></p></td></tr>
+			<tr><th scope="row"><label for="max_tracked_patterns"><?php esc_html_e( 'Maximum tracked patterns', 'shift8-dbcache' ); ?></label></th><td><input name="shift8_dbcache_settings[max_tracked_patterns]" id="max_tracked_patterns" type="number" min="50" max="5000" value="<?php echo esc_attr( $settings['max_tracked_patterns'] ); ?>" class="small-text" /><p class="description"><?php esc_html_e( 'Cap the number of distinct query patterns stored during capture to protect site availability.', 'shift8-dbcache' ); ?></p></td></tr>
+			<tr><th scope="row"><label for="retention_days"><?php esc_html_e( 'Retention (days)', 'shift8-dbcache' ); ?></label></th><td><input name="shift8_dbcache_settings[retention_days]" id="retention_days" type="number" min="1" value="<?php echo esc_attr( $settings['retention_days'] ); ?>" class="small-text" /></td></tr>
+			<tr><th scope="row"><label for="stale_behavior"><?php esc_html_e( 'Stale behavior', 'shift8-dbcache' ); ?></label></th><td><select name="shift8_dbcache_settings[stale_behavior]" id="stale_behavior"><option value="serve_stale_then_refresh" <?php selected( $settings['stale_behavior'], 'serve_stale_then_refresh' ); ?>><?php esc_html_e( 'Serve stale once, refresh in background', 'shift8-dbcache' ); ?></option><option value="expire_hard" <?php selected( $settings['stale_behavior'], 'expire_hard' ); ?>><?php esc_html_e( 'Expire hard and fetch fresh', 'shift8-dbcache' ); ?></option></select></td></tr>
+			<tr><th scope="row"><label for="default_rule_ttl"><?php esc_html_e( 'Default rule TTL (seconds)', 'shift8-dbcache' ); ?></label></th><td><input name="shift8_dbcache_settings[default_rule_ttl]" id="default_rule_ttl" type="number" min="30" value="<?php echo esc_attr( $settings['default_rule_ttl'] ); ?>" class="small-text" /></td></tr>
+			<tr><th scope="row"><label for="redis_enabled"><?php esc_html_e( 'Enable active cache', 'shift8-dbcache' ); ?></label></th><td><label><input name="shift8_dbcache_settings[redis_enabled]" id="redis_enabled" type="checkbox" value="1"<?php echo '1' === $settings['redis_enabled'] ? ' checked="checked"' : ''; ?> /> <?php esc_html_e( 'Use Redis-backed active query caching for approved rules.', 'shift8-dbcache' ); ?></label></td></tr>
+			<tr><th scope="row"><label for="redis_host"><?php esc_html_e( 'Redis host', 'shift8-dbcache' ); ?></label></th><td><input name="shift8_dbcache_settings[redis_host]" id="redis_host" type="text" value="<?php echo esc_attr( $settings['redis_host'] ); ?>" class="regular-text" /><p class="description"><?php esc_html_e( 'Set this to a local or remote Redis hostname.', 'shift8-dbcache' ); ?></p></td></tr>
+			<tr><th scope="row"><label for="redis_port"><?php esc_html_e( 'Redis port', 'shift8-dbcache' ); ?></label></th><td><input name="shift8_dbcache_settings[redis_port]" id="redis_port" type="number" min="1" value="<?php echo esc_attr( $settings['redis_port'] ); ?>" class="small-text" /></td></tr>
+			<tr><th scope="row"><label for="redis_database"><?php esc_html_e( 'Redis database', 'shift8-dbcache' ); ?></label></th><td><input name="shift8_dbcache_settings[redis_database]" id="redis_database" type="number" min="0" value="<?php echo esc_attr( $settings['redis_database'] ); ?>" class="small-text" /></td></tr>
+			<tr><th scope="row"><label for="redis_prefix"><?php esc_html_e( 'Redis key prefix', 'shift8-dbcache' ); ?></label></th><td><input name="shift8_dbcache_settings[redis_prefix]" id="redis_prefix" type="text" value="<?php echo esc_attr( $settings['redis_prefix'] ); ?>" class="regular-text" /><p class="description"><?php esc_html_e( 'For security, define SHIFT8_DBCACHE_REDIS_PASSWORD in wp-config.php or an environment variable instead of storing a Redis password in the database.', 'shift8-dbcache' ); ?></p></td></tr>
+		</table>
+		<div class="shift8-dbcache-form-actions">
+			<?php submit_button( __( 'Save settings', 'shift8-dbcache' ), 'primary', 'submit', false ); ?>
+			<button type="submit" name="action" value="shift8_dbcache_test_redis_connection" formaction="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" formmethod="post" class="button button-secondary"><?php esc_html_e( 'Test Redis connection', 'shift8-dbcache' ); ?></button>
+			<span class="shift8-dbcache-inline-status <?php echo ! empty( $redis_status['connected'] ) ? 'is-success' : 'is-muted'; ?>"><?php echo esc_html( $redis_status['message'] ); ?></span>
+		</div>
+	</form>
+</div>

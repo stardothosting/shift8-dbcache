@@ -16,6 +16,26 @@ if ( ! defined( 'WP_CONTENT_DIR' ) ) {
 	define( 'WP_CONTENT_DIR', '/tmp/wordpress/wp-content' );
 }
 
+if ( ! defined( 'OBJECT' ) ) {
+	define( 'OBJECT', 'OBJECT' );
+}
+
+if ( ! defined( 'SHIFT8_DBCACHE_FILE' ) ) {
+	define( 'SHIFT8_DBCACHE_FILE', dirname( __DIR__ ) . '/shift8-dbcache.php' );
+}
+
+if ( ! defined( 'SHIFT8_DBCACHE_PATH' ) ) {
+	define( 'SHIFT8_DBCACHE_PATH', dirname( __DIR__ ) . '/' );
+}
+
+if ( ! defined( 'SHIFT8_DBCACHE_URL' ) ) {
+	define( 'SHIFT8_DBCACHE_URL', 'http://example.com/wp-content/plugins/shift8-dbcache/' );
+}
+
+if ( ! defined( 'SHIFT8_DBCACHE_BASENAME' ) ) {
+	define( 'SHIFT8_DBCACHE_BASENAME', 'shift8-dbcache/shift8-dbcache.php' );
+}
+
 if ( ! class_exists( 'PHPUnit\\Framework\\TestCase' ) ) {
 	require_once __DIR__ . '/phpunit-stub.php';
 }
@@ -53,6 +73,12 @@ if ( ! function_exists( 'add_menu_page' ) ) {
 if ( ! function_exists( 'add_submenu_page' ) ) {
 	function add_submenu_page() {
 		return 'shift8-dbcache';
+	}
+}
+
+if ( ! function_exists( 'wp_enqueue_style' ) ) {
+	function wp_enqueue_style() {
+		return true;
 	}
 }
 
@@ -264,6 +290,12 @@ if ( ! function_exists( 'number_format_i18n' ) ) {
 }
 }
 
+if ( ! function_exists( 'wp_json_encode' ) ) {
+	function wp_json_encode( $value ) {
+		return json_encode( $value );
+	}
+}
+
 if ( ! function_exists( 'is_admin' ) ) {
 	function is_admin() {
 		return false;
@@ -283,6 +315,10 @@ if ( ! function_exists( 'wp_die' ) ) {
 }
 
 require_once dirname( __DIR__ ) . '/includes/class-settings.php';
+require_once dirname( __DIR__ ) . '/includes/class-rules.php';
+require_once dirname( __DIR__ ) . '/includes/class-runtime.php';
+require_once dirname( __DIR__ ) . '/includes/class-redis-client.php';
+require_once dirname( __DIR__ ) . '/includes/class-dropin.php';
 require_once dirname( __DIR__ ) . '/includes/class-collector.php';
 require_once dirname( __DIR__ ) . '/includes/class-plugin.php';
 require_once dirname( __DIR__ ) . '/includes/class-admin.php';
